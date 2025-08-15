@@ -44,7 +44,7 @@ void cb_clear(cbuffer_t *cb)
 
 uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
 {
-    if (cb == NULL || !cb->active)
+    if (cb == NULL || buf != NULL || !cb->active)
         return NOT_VALID;
     uint32_t count = 0;
     while (count < nbytes)
@@ -53,11 +53,8 @@ uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
             break;
         else
         {
-            if (buf != NULL)
-            {
-                ((uint8_t*)buf)[count] = cb->data[cb->reader];
-                cb->reader = (cb->reader + 1) % cb->size;
-            }
+            ((uint8_t*)buf)[count] = cb->data[cb->reader];
+            cb->reader = (cb->reader + 1) % cb->size;
         }    
         count++;
     }
@@ -66,7 +63,7 @@ uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
 
 uint32_t cb_write(cbuffer_t *cb, void *buf, uint32_t nbytes)
 {
-    if (cb == NULL || !cb->active)
+    if (cb == NULL || buf != NULL || !cb->active)
         return NOT_VALID;
     uint32_t count = 0;
     while (count < nbytes)
@@ -78,11 +75,8 @@ uint32_t cb_write(cbuffer_t *cb, void *buf, uint32_t nbytes)
         }
         else
         {
-            if (buf != NULL)
-            {
-                cb->data[cb->writer] = ((uint8_t*)buf)[count];
-                cb->writer = (cb->writer + 1) % cb->size;
-            }
+            cb->data[cb->writer] = ((uint8_t*)buf)[count];
+            cb->writer = (cb->writer + 1) % cb->size;
         }    
         count++;
     }
