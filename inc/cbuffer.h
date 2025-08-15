@@ -52,11 +52,6 @@ typedef struct
 } cbuffer_t;
 
 /* Public macros ------------------------------------------------------ */
-#define ERROR_CB_DATA_COUNT             0
-#define ERROR_CB_SPACE_COUNT            0
-#define READER_BEFORE_WRITER_IS_FULL    0
-#define WRITER_BEFORE_READER_IS_FULL    1
-#define NO_SPACE_AVAILABLE              0
 
 /* Public variables --------------------------------------------------- */
 /* Public function prototypes ----------------------------------------- */

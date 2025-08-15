@@ -15,6 +15,9 @@
 /* Includes ----------------------------------------------------------- */
 #include "cbuffer.h"
 
+/* Public macros ------------------------------------------------------ */
+#define NOT_VALID                   0
+
 /* Public function ---------------------------------------------------- */
 void cb_init(cbuffer_t *cb, void *buf, uint32_t size)
 {
@@ -41,45 +44,55 @@ void cb_clear(cbuffer_t *cb)
 
 uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
 {
-    while (cb->reader != nbytes)
+    if (cb == NULL || !cb->active)
+        return NOT_VALID;
+    uint32_t count = 0;
+    while (count < nbytes)
     {
-        if ((cb->writer - cb->reader) == READER_BEFORE_WRITER_IS_FULL ||
-            (cb->writer + cb->size - cb->reader == WRITER_BEFORE_READER_IS_FULL))
-            return cb->reader;
+        if (cb_data_count(cb) == NOT_VALID)
+            break;
         else
         {
             if (buf != NULL)
             {
-                ((uint8_t*)buf)[cb->reader] = cb->data[cb->reader];
+                ((uint8_t*)buf)[count] = cb->data[cb->reader];
                 cb->reader = (cb->reader + 1) % cb->size;
             }
         }    
+        count++;
     }
-    return cb->reader;
+    return count;
 }
 
 uint32_t cb_write(cbuffer_t *cb, void *buf, uint32_t nbytes)
 {
-    while (cb->writer != nbytes)
+    if (cb == NULL || !cb->active)
+        return NOT_VALID;
+    uint32_t count = 0;
+    while (count < nbytes)
     {
-        if (cb_space_count(cb) == NO_SPACE_AVAILABLE)
-            return cb->writer;
+        if (cb_space_count(cb) == NOT_VALID)
+        {
+            cb->overflow = nbytes - count;
+            break;
+        }
         else
         {
             if (buf != NULL)
             {
-                cb->data[cb->writer] = ((uint8_t*)buf)[cb->writer];
+                cb->data[cb->writer] = ((uint8_t*)buf)[count];
                 cb->writer = (cb->writer + 1) % cb->size;
             }
         }    
+        count++;
     }
-    return cb->writer;
+    return count;
 }
 
 uint32_t cb_data_count(cbuffer_t *cb) 
 {
     if (cb == NULL) 
-        return ERROR_CB_DATA_COUNT;
+        return NOT_VALID;
     if (cb->reader <= cb->writer)
         return cb->writer - cb->reader;
     else
@@ -89,6 +102,6 @@ uint32_t cb_data_count(cbuffer_t *cb)
 uint32_t cb_space_count(cbuffer_t *cb) 
 {
     if (cb == NULL)
-        return ERROR_CB_SPACE_COUNT;
+        return NOT_VALID;
     return cb->size - cb_data_count(cb) - 1;
 }
