@@ -44,7 +44,7 @@ void cb_clear(cbuffer_t *cb)
 
 uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
 {
-    if (cb == NULL || buf != NULL || !cb->active)
+    if (cb == NULL || buf == NULL || !cb->active)
         return NOT_VALID;
     uint32_t count = 0;
     while (count < nbytes)
@@ -63,7 +63,7 @@ uint32_t cb_read(cbuffer_t *cb, void *buf, uint32_t nbytes)
 
 uint32_t cb_write(cbuffer_t *cb, void *buf, uint32_t nbytes)
 {
-    if (cb == NULL || buf != NULL || !cb->active)
+    if (cb == NULL || buf == NULL || !cb->active)
         return NOT_VALID;
     uint32_t count = 0;
     while (count < nbytes)
