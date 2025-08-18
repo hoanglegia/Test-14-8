@@ -1,22 +1,27 @@
 #include "cbuffer.h"
 cbuffer_t cb;
-uint8_t cb_buff[6];
+uint8_t cb_buff[5];
 uint8_t a;
 void main(void)
 {
-    cb_init(&cb, cb_buff, 100);
+    cb_init(&cb, cb_buff, 5);
     cb_clear(&cb);
-    char a[] = {0, 1, 2, 3, 4}; 
-    cb_write(&cb, a, 5);
-    char b[5] = {0, 0, 0, 0, 0};
-    cb_read(&cb, b, 4);
+    char a[] = {0, 1, 2, 3}; 
+    cb_write(&cb, a, 4);
+
+    char b[6] = {0};
+    cb_read(&cb, b, 3);
     for(int i=0;i<5;i++){
         printf("%d ",b[i]);
     }
     printf("\n");
-    int c[6] = {0, 0, 0, 0, 0, 0};
-    cb_read(&cb, c, 6);
+    
+    char c[] = {4, 5, 6}; 
+    cb_write(&cb, c, 3);
+
+    char d[6] = {0};
+    cb_read(&cb, d, 3);
     for(int j=0;j<6;j++){
-        printf("%d ",c[j]);
+        printf("%d ",d[j]);
     }
 }
