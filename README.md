@@ -119,30 +119,30 @@ The LED Library provides an abstraction for controlling three on-board LEDs on t
 ```C
 void LED1_ON()
 {
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 1); // Turn on LED 1
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 0); // Turn off LED 2
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 0); // Turn off LED 3
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 1); // Turn on LED 1
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 0); // Turn off LED 2
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 0); // Turn off LED 3
 }
 
 void LED2_ON()
 {
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 0); // Turn off LED 1
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 1); // Turn on LED 2
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 0); // Turn off LED 3
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 0); // Turn off LED 1
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 1); // Turn on LED 2
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 0); // Turn off LED 3
 }
 
 void LED3_ON()
 {
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 0); // Turn off LED 1
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 0); // Turn off LED 2
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 1); // Turn on LED 3
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 0); // Turn off LED 1
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 0); // Turn off LED 2
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 1); // Turn on LED 3
 }
 
 void LED_OFF()
 {
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 0); // Turn off LED 1
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 0); // Turn off LED 2
-	HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 0); // Turn off LED 3
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D1, 0); // Turn off LED 1
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D2, 0); // Turn off LED 2
+  HAL_GPIO_WritePin(myLED.PORT_D, myLED.D3, 0); // Turn off LED 3
 }
 ```
 
@@ -172,48 +172,48 @@ case_fsm case_itr = off;
 button_state button_read(button *Button)
 {
   Button->state = NO_CLICK;
-	while (HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0) == 1) 			// Button is pressed
-	{
-		Button->timePress++;																// Increase time when hold the button 
-		Button->isPress = 1;
-		HAL_Delay(1);
-	}
-	if (Button->isPress)
-	{
-		while (HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0) == 0)			// Stop pressing button
-		{
-			Button->timeDouble++;															// Increase time when release the button
-			HAL_Delay(1);
-			if (Button->timeDouble > DOUBLE_CLICK_TIME)				// Check button's state			
-			{
-				if (Button->timePress > DEBOUND_TIME && Button->timePress <= SINGLE_CLICK_TIME)	// Press the button 1 time (SINGLE CLICK)
-				{
-					Button->isPress = 0;
-					Button->timePress = 0;
-					Button->timeDouble = 0;
-					Button->state = SINGLE_CLICK;
-					return Button->state;
-				}
-				else if (Button->timePress > SINGLE_CLICK_TIME)	// Hold the button (LONG CLICK)
-				{
-					Button->isPress = 0;
-					Button->timePress = 0;
-					Button->timeDouble = 0;
-					Button->state = LONG_CLICK;
-					return Button->state;
-				}
-			}
-		}
-		while (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1) 		// Press the button 2 times (DOUBLE CLICK)
-		{
-			Button->state = DOUBLE_CLICK;
-			Button->isPress = 0;
-			Button->timePress = 0;
-			Button->timeDouble = 0;
-			return Button->state;
-		}
-	}
-	return NO_CLICK;																			// Default Button's State
+  while (HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0) == 1) // Button is pressed
+  {
+    Button->timePress++; // Increase time when hold the button 
+    Button->isPress = 1;
+    HAL_Delay(1);
+  }
+  if (Button->isPress)
+  {
+    while (HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0) == 0)	// Stop pressing button
+    {
+      Button->timeDouble++; // Increase time when release the button
+      HAL_Delay(1);
+      if (Button->timeDouble > DOUBLE_CLICK_TIME) // Check button's state			
+      {
+        if (Button->timePress > DEBOUND_TIME && Button->timePress <= SINGLE_CLICK_TIME)	// Press the button 1 time (SINGLE CLICK)
+        {
+          Button->isPress = 0;
+          Button->timePress = 0;
+          Button->timeDouble = 0;
+          Button->state = SINGLE_CLICK;
+          return Button->state;
+        }
+        else if (Button->timePress > SINGLE_CLICK_TIME)	// Hold the button (LONG CLICK)
+        {
+          Button->isPress = 0;
+          Button->timePress = 0;
+          Button->timeDouble = 0;
+          Button->state = LONG_CLICK;
+          return Button->state;
+        }
+      }
+    }
+    while (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1) // Press the button 2 times (DOUBLE CLICK)
+    {
+      Button->state = DOUBLE_CLICK;
+      Button->isPress = 0;
+      Button->timePress = 0;
+      Button->timeDouble = 0;
+      return Button->state;
+    }
+  }
+  return NO_CLICK; // Default Button's State
 }
 ```
 
@@ -256,18 +256,18 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	/* Private defines ----------------------------------------------------- */
-	myLED.PORT_D = GPIOD;
-	myLED.D1 = GPIO_PIN_12;
+  /* Private defines ----------------------------------------------------- */
+  myLED.PORT_D = GPIOD;
+  myLED.D1 = GPIO_PIN_12;
   myLED.D2 = GPIO_PIN_13;
-	myLED.D3 = GPIO_PIN_14;
+  myLED.D3 = GPIO_PIN_14;
 	
-	myButton.PORT_BUTTON = GPIOA;
-	myButton.BUTTON_PIN = GPIO_PIN_0;
-	myButton.state = NO_CLICK;
-	myButton.isPress = 0;
-	myButton.timePress = 0;
-	myButton.timeDouble = 0;
+  myButton.PORT_BUTTON = GPIOA;
+  myButton.BUTTON_PIN = GPIO_PIN_0;
+  myButton.state = NO_CLICK;
+  myButton.isPress = 0;
+  myButton.timePress = 0;
+  myButton.timeDouble = 0;
 	
 	
   /* USER CODE END 1 */
@@ -300,55 +300,55 @@ int main(void)
   {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
-		switch(case_itr)
-		{
-			case off:			// Turn off all LEDS
-				if(button_read(&myButton) == SINGLE_CLICK)
-				{
-					case_itr = led1_on;
-				}
-				LED_OFF();
-				break;
+    switch(case_itr)
+    {
+      case off:			// Turn off all LEDS
+        if (button_read(&myButton) == SINGLE_CLICK)
+        {
+          case_itr = led1_on;
+        }
+        LED_OFF();
+        break;
 				
-			case led1_on: // Turn on LED 1
-				LED1_ON();
-				if(button_read(&myButton) == DOUBLE_CLICK)
-				{
-					case_itr = led2_on;
-				}
-				if(button_read(&myButton) == LONG_CLICK)
-				{
-					case_itr = off;
-				}
-				break;
+      case led1_on: // Turn on LED 1
+        LED1_ON();
+        if (button_read(&myButton) == DOUBLE_CLICK)
+        {
+          case_itr = led2_on;
+        }
+        if (button_read(&myButton) == LONG_CLICK)
+        {
+          case_itr = off;
+        }
+        break;
 				
-			case led2_on:	// Turn on LED 2
-				LED2_ON();
-				if(button_read(&myButton) == DOUBLE_CLICK)
-				{
-					case_itr = led3_on;
-				}
-				if(button_read(&myButton) == LONG_CLICK)
-				{
-					case_itr = off;
-				}
-				break;
+      case led2_on:	// Turn on LED 2
+        LED2_ON();
+        if (button_read(&myButton) == DOUBLE_CLICK)
+        {
+          case_itr = led3_on;
+        }
+        if (button_read(&myButton) == LONG_CLICK)
+        {
+          case_itr = off;
+        }
+        break;
 				
-			case led3_on:	// Turn on LED 3
-				LED3_ON();
-				if(button_read(&myButton) == DOUBLE_CLICK)
-				{
-					case_itr = led1_on;
-				}
-				if(button_read(&myButton) == LONG_CLICK)
-				{
-					case_itr = off;
-				}
-				break;
+      case led3_on:	// Turn on LED 3
+        LED3_ON();
+        if (button_read(&myButton) == DOUBLE_CLICK)
+        {
+          case_itr = led1_on;
+        }
+        if (button_read(&myButton) == LONG_CLICK)
+        {
+          case_itr = off;
+        }
+        break;
 				
-			default:
-				break;
-		}
+      default:
+        break;
+    }
   }
   /* USER CODE END 3 */
 }
