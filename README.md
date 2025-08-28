@@ -28,7 +28,6 @@
       </ul>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#result">Result</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
@@ -403,7 +402,27 @@ Click on the Option for Target icon (or go to Project → Option for Target) to 
 ![resetnrun](./image/resetnrun.png)
 
 ## Result
+Below are the results corresponding to each scenario, as shown in the images:
 
-## License
+- **Result 1:** LED1 is ON, while LED2 and LED3 are OFF.  
+![result1](./image/result1.jpg)  
+<br>
+
+- **Result 2:** LED2 is ON, while LED1 and LED3 are OFF.
+![result2](./image/result2.jpg)
+<br>
+
+- **Result 3:** LED3 is ON, while LED1 and LED2 are OFF.
+![result3](./image/result3.jpg)
+<br>
+
+- **Result 4:** All LEDs (LED1, LED2, and LED3) are OFF.
+![result4](./image/result4.jpg)
 
 ## Acknowledgments
+
+* [KeilC](https://www.keil.com/demo/eval/arm.htm)
+* [STM32F4 Reference manual](https://www.st.com/resource/en/reference_manual/dm00031020-stm32f405-415-stm32f407-417-stm32f427-437-and-stm32f429-439-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf)
+* [STM32F407G-DISC1 Datasheet](https://www.alldatasheet.com/datasheet-pdf/download/792967/ETC2/STM32F407G-DISC1.html)
+* [STM32F407G-DISC1 schematic](https://www.st.com/resource/en/schematic_pack/mb997-f407vgt6-e01_schematic.pdf)
+* [STM32 with single click, double click and long click](https://khuenguyencreator.com/stm32-voi-nut-nhan-3-che-do-click-double-click-va-long-click/)
