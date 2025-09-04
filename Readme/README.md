@@ -14,7 +14,7 @@
         <li><a href="#exercise-1-hal-timer">Exercise 1: HAL TIMER</a></li>
         <li><a href="#exercise-2-hal-pwm">Exercise 2: HAL PWM</a></li>
         <li><a href="#exercise-3-led-fade">Exercise 3: LED FADE</a></li>
-        <li><a href="#software-and-overall-architecture">Software and Overall Architecture</a></li>
+        <li><a href="#software">Software</a></li>
       </ul>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#result">Result</a></li>
@@ -129,33 +129,30 @@ Through these exercises, the project provides a clear introduction to:
     }
     ```
 
-### Software and Overall Architecture
-#### Software
+### Software
 - **STM32CubeMX**: A hardware configuration tool that automatically generates HAL code for peripherals such as GPIO, EXTI, and TIM, helping to shorten development time.
 ![STM32CubeMX](./image/STM32CubeMX.png)
 - **Keil µVision 5**: An integrated development environment (IDE) for ARM, supporting compilation, programming, and debugging for STM32.
 ![KeilC](./image/KeilC.png)
 - **STM32CubeF4 HAL Library**: A hardware abstraction library provided by ST, making peripheral operations easier, increasing compatibility, and reducing errors from direct register programming.
 ![STM32F4Library](./image/STM32F4Library.png)
-#### Architecture
-```text
-Application Layer
-  └── main.c
-      - Initializes hardware, selects exercise mode, and runs the main control loop for each exercise:
-        * Exercise 1: Timer interrupt toggling RGB LED
-        * Exercise 2: PWM output for 1Hz ON/OFF
-        * Exercise 3: PWM output with variable duty for LED fading
-
-Drivers (User)
-  ├── rgb_led.c/.h   // Functions to control RGB LED (on/off/toggle, set color, set brightness)
-  ├── timer.c/.h     // Timer initialization, interrupt handler (for Exercise 1)
-  └── pwm.c/.h       // PWM initialization, set frequency/duty (for Exercise 2 & 3)
-
-HAL (STM32Cube)
-  └── CMSIS + HAL    // Low-level drivers for GPIO, TIM, PWM, NVIC, etc.
-```
 
 ## Usage
+**Directory Tree**
+```C
+
+├─ Application/User/Core
+│  ├─ main.c
+|  └─ ...
+├─ Driver/            
+│  ├─ CMSIS/...
+│  └─ STM32F4xx_HAL_Driver/...
+├─ images/
+│  └─ ...
+|
+└─ README.md
+```
+
 **Operations with Keil C**
 After configuring and generating code from **STM32CubeMX**, open the project in **Keil C**.
 Navigate to the file main.c located under **Application/User**.
@@ -180,7 +177,33 @@ Click on the Option for Target icon (or go to Project → Option for Target) to 
 ![resetnrun](./image/resetnrun.png)
 
 ## Result
+**Exercise 1 & Exercise 2:** LED ON/OFF every 1 second
 
+In these exercises, the LED is controlled to turn ON and OFF alternately with a period of 1 second. The observed result is that the LED turns ON for 1 second, then OFF for 1 second, and this cycle repeats continuously. This is illustrated by the following images:
+
+- **LED_ON.jpg**: The LED is fully ON.
+- **LED_OFF.jpg**: The LED is completely OFF.
+
+| State   | Image                                 |
+|---------|----------------------------------------|
+| LED ON  | ![LED_ON](../Readme/Image/LED_ON.jpg)  |
+| LED OFF | ![LED_OFF](../Readme/Image/LED_OFF.jpg)|
+---
+**Exercise 3:** LED gradually brightens and dims (ON → MEDIUM → OFF)
+
+In this exercise, the LED is controlled to change its brightness, the light gradually brightens and then dims continuously. This process repeats, creating a fading effect from bright to dim. The results are shown in the following images:
+
+- **LED_ON.jpg**: The LED is at maximum brightness.
+- **LED_MEDIUM.jpg**: The LED is at medium brightness.
+- **LED_OFF.jpg**: The LED is completely OFF.
+
+| State        | Image                                         |
+|--------------|-----------------------------------------------|
+| LED ON       | ![LED_ON](../Readme/Image/LED_ON.jpg)         |
+| LED MEDIUM   | ![LED_MEDIUM](../Readme/Image/LED_MEDIUM.jpg) |
+| LED OFF      | ![LED_OFF](../Readme/Image/LED_OFF.jpg)       |
+
+---
 ## Acknowledgments
 * [KeilC](https://www.keil.com/demo/eval/arm.htm)
 * [STM32F1 Reference manual](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
