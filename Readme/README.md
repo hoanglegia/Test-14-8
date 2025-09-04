@@ -2,7 +2,7 @@
 **Author**: Group 5  
 **Update**: 2025-09-04  
 
-# Generate 1Hz Wave to Control RGB LED
+# Generate 1Hz Wave to Control LED
 
 <details>
   <summary>Table of Contents</summary>
@@ -23,7 +23,7 @@
 </details>
 
 ## About The Project
-This project includes three exercises that demonstrate how to control an **RGB LED** on the **STM32F103C8T6** board using the HAL library:
+This project includes three exercises that demonstrate how to control an **LED** on the **STM32F103C8T6** board using the HAL library:
 
 **HAL TIMER** – Configure a hardware timer in interrupt mode to generate a 1 Hz square wave, toggling the RGB LED ON/OFF.
 
@@ -41,16 +41,14 @@ Through these exercises, the project provides a clear introduction to:
 ### Exercise 1: HAL TIMER
 - **Description**
   - Use the STM32F103C8T6 HAL TIMER library to generate a 1Hz square wave.
-  - The 1Hz signal is used to toggle the RGB LED on and off.
+  - The 1Hz signal is used to toggle the LED on and off.
 
 - **Hardware**
   - Board: STM32F103C8T6 (Blue Pill)
-  - RGB LED connected to GPIO pins 
-    - GND → GND
-    - 3V → 3V
-    - Red → PB3
-    - Green → PB5
-    - Blue → PB7
+  - LED connected to GPIO pins:
+    - LED + → PB0
+    - LED - → GND
+
 - **Software configuration**
 ![IOC1](./image/IOC1.png)
 - **Timer Configuration**
@@ -64,9 +62,17 @@ Through these exercises, the project provides a clear introduction to:
     ```
 - **Code Placeholder:**
     ```c
-    // === TIMER Initialization Code Here ===
-
-    // === RGB LED Toggle Code Here ===
+    void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+    {
+      if (htim->Instance == htim1.Instance)
+      {
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
+      }
+    }
+    int main()
+    {
+      HAL_TIM_Base_Start_IT(&htim1);
+    }
     ```
 
 ### Exercise 2: HAL PWM
@@ -76,12 +82,9 @@ Through these exercises, the project provides a clear introduction to:
 
 - **Hardware**
   - Board: STM32F103C8T6 (Blue Pill)
-  - RGB LED connected to GPIO pins 
-    - GND → GND
-    - 3V → 3V
-    - Red → PB3
-    - Green → PB5
-    - Blue → PB7
+  - LED connected to GPIO pins:
+    - LED + → PB0
+    - LED - → GND
     
 - **Software configuration**
 ![IOC2](./image/IOC2.png)
@@ -90,13 +93,7 @@ Through these exercises, the project provides a clear introduction to:
   - **Target Frequency:** 1 Hz
   - **Prescaler (PSC):** 7199
   - **Duty Cycle:** 50% duty
-        CCR = ARR / 2 = 5000
-- **Code Placeholder:**
-    ```c
-    // === TIMER Initialization Code Here ===
-
-    // === RGB LED Toggle Code Here ===
-    ```
+        CCR = ARR / 2 - 1 = 5000 - 1 = 4999
 
 ### Exercise 3: LED FADE
 - **Description**
@@ -104,27 +101,32 @@ Through these exercises, the project provides a clear introduction to:
 
 - **Hardware**
   - Board: STM32F103C8T6 (Blue Pill)
-  - RGB LED connected to GPIO pins 
-    - GND → GND
-    - 3V → 3V
-    - Red → PB3
-    - Green → PB5
-    - Blue → PB7
+  - LED connected to GPIO pins:
+    - LED + → PB0
+    - LED - → GND
 
 - **Software configuration**
 ![IOC3](./image/IOC3.png)
 
 - **Timer Configuration**
   - **System Clock:** 72 MHz
-  - **PWM Frequency:** 1 kHz (for smooth fading)
-  - **Prescaler (PSC):** 71
-  - **Duty Cycle:**
-    - Vary CCR from 0 to 999 for 0% to 100% brightnes
+  - **PWM Frequency:** 72 kHz (Timer frequency = 72,000,000 / (PSC + 1) / (ARR + 1))
 - **Code Placeholder:**
     ```c
-    // === TIMER Initialization Code Here ===
-
-    // === RGB LED Toggle Code Here ===
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+    while (1)
+    {
+      for(int i = 0; i < 100; i++)
+      {
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
+        HAL_Delay(5);
+      }
+      for(int i = 99; i >= 0; i--)
+      {
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
+        HAL_Delay(5);
+      }
+    }
     ```
 
 ### Software and Overall Architecture
